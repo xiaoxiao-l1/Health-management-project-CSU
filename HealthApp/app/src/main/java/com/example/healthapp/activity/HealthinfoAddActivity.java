@@ -66,7 +66,17 @@ public class HealthinfoAddActivity extends AppCompatActivity implements View.OnC
             return;
         }
         if (TextUtils.isEmpty(strTv_bloodsugar)) {
-            Toast.makeText(this, "请输入内容", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入血糖值", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            double bloodSugar = Double.parseDouble(strTv_bloodsugar);
+            if (bloodSugar < 0) {
+                Toast.makeText(this, "血糖值不能为负数", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "请输入有效的血糖值", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(strTv_heartrate)) {
