@@ -54,7 +54,12 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 if (TextUtils.isEmpty(strPassword)){
-                    Toast.makeText(LoginActivity.this, "请输入用户名", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "请输入密码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // 添加密码长度验证（必须超过六位数，即至少7位）
+                if (strPassword.length() <= 6) {
+                    Toast.makeText(LoginActivity.this, "密码必须超过六位数", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -82,14 +87,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
             }
         });
 
         findViewById(R.id.register).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
 
