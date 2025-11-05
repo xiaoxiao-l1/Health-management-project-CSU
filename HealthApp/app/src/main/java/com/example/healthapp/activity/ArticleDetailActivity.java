@@ -24,19 +24,37 @@ public class ArticleDetailActivity extends AppCompatActivity {
     private ArticleBean article;
 
     @Override
-    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        // 添加空值检查 ← 替换从这里开始
+        if (getIntent() == null || getIntent().getSerializableExtra("data") == null) {
+            finish();
+            return;
+        }
+
         article = (ArticleBean) getIntent().getSerializableExtra("data");
+
+        // 检查 article 数据是否完整
+        if (article == null) {
+            finish();
+            return;
+        }
+
+        // 初始化视图
         findViewById(R.id.finish).setOnClickListener(view -> finish());
         mTitle = findViewById(R.id.title);
         mContent = findViewById(R.id.content);
         mImg = findViewById(R.id.img);
 
+        // 设置数据
+        initData();
+    }
 
+    private void initData() {
         mImg.setImageResource(article.getImg());
         mTitle.setText(article.getTitle());
         mContent.setText(article.getContent());
-
     }
 }
