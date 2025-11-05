@@ -21,11 +21,11 @@ import java.util.ArrayList;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText mUsername;
-    private EditText mPassword,mNickName;
+    private EditText mPassword, mNickName;
     private DBManage dbManage;
     private RadioGroup radioGroup_main;
 
-    private String sex="男";
+    private String sex = "男";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,9 +45,9 @@ public class RegisterActivity extends AppCompatActivity {
         radioGroup_main.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId==R.id.radioButton1_main){
+                if (checkedId == R.id.radioButton1_main) {
                     sex = "男";
-                }else if (checkedId==R.id.radioButton2_main){
+                } else if (checkedId == R.id.radioButton2_main) {
                     sex = "女";
                 }
             }
@@ -66,28 +66,33 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-                if (TextUtils.isEmpty(name)){
+                if (TextUtils.isEmpty(name)) {
                     Toast.makeText(RegisterActivity.this, "请输入用户名", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (TextUtils.isEmpty(psd)){
-                    Toast.makeText(RegisterActivity.this, "请输入用户名", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(psd)) {
+                    Toast.makeText(RegisterActivity.this, "请输入密码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (TextUtils.isEmpty(nickname)){
+                // 添加密码长度验证（超过6位，即至少7位）
+                if (psd.length() <= 6) {
+                    Toast.makeText(RegisterActivity.this, "密码长度必须超过6位", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(nickname)) {
                     Toast.makeText(RegisterActivity.this, "请输入昵称", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //存入数据库
                 ArrayList<UserBean> userBeans = dbManage.selectUser(name);
-                if (userBeans.size()>0){
+                if (userBeans.size() > 0) {
                     Toast.makeText(RegisterActivity.this, "用户已存在", Toast.LENGTH_SHORT).show();
-                }else {
-                    long l = dbManage.addUser(new UserBean( name, psd, sex, "",nickname));
-                    if (l>0){
+                } else {
+                    long l = dbManage.addUser(new UserBean(name, psd, sex, "", nickname));
+                    if (l > 0) {
                         Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                         finish();
-                    }else {
+                    } else {
                         Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
                     }
 
