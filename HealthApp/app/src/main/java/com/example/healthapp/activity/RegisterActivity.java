@@ -17,6 +17,8 @@ import com.example.healthapp.db.DBManage;
 import com.example.healthapp.utils.SpUtil;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -26,6 +28,9 @@ public class RegisterActivity extends AppCompatActivity {
     private RadioGroup radioGroup_main;
 
     private String sex = "男";
+    // 账号验证正则表达式：至少包含1个英文和1个数字，且只能由英文和数字组成
+    private static final String USERNAME_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$";
+    private static final Pattern USERNAME_PATTERN = Pattern.compile(USERNAME_REGEX);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +73,12 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(name)) {
                     Toast.makeText(RegisterActivity.this, "请输入用户名", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // 验证账号格式（英文+数字）
+                Matcher matcher = USERNAME_PATTERN.matcher(name);
+                if (!matcher.matches()) {
+                    Toast.makeText(RegisterActivity.this, "账号必须包含英文和数字", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(psd)) {
