@@ -62,9 +62,43 @@ public class HealthinfoAddActivity extends AppCompatActivity implements View.OnC
         String strTv_heartrate = mTv_heartrate.getText().toString();
         String strTv_des = mTv_des.getText().toString();
         if (TextUtils.isEmpty(strTv_bloodpressure)) {
-            Toast.makeText(this, "请输入内容", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入血压值", Toast.LENGTH_SHORT).show();
             return;
         }
+        try {
+            // 血压可能是收缩压/舒张压（如 "120/80"），需特殊处理：分割后分别校验
+            if (strTv_bloodpressure.contains("/")) {
+                String[] pressureParts = strTv_bloodpressure.split("/");
+                // 校验格式：必须是两个数值
+                if (pressureParts.length != 2) {
+                    Toast.makeText(this, "血压格式错误（请输入如 120/80 的格式）", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // 分别校验收缩压和舒张压：非空 + 数字 + 非负数
+                double systolic = Double.parseDouble(pressureParts[0].trim()); // 收缩压
+                double diastolic = Double.parseDouble(pressureParts[1].trim()); // 舒张压
+                if (systolic < 0 || diastolic < 0) {
+                    Toast.makeText(this, "血压值不能为负数", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // 可选：添加血压合理范围校验（符合生理逻辑，可选保留）
+                if (systolic > 250 || diastolic > 150 || systolic < 60 || diastolic < 40) {
+                    Toast.makeText(this, "血压值超出合理范围，请检查输入", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } else {
+                // 若仅输入单个数值（如收缩压），直接校验非负数
+                double pressure = Double.parseDouble(strTv_bloodpressure.trim());
+                if (pressure < 0) {
+                    Toast.makeText(this, "血压值不能为负数", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "请输入有效的血压值", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (TextUtils.isEmpty(strTv_bloodsugar)) {
             Toast.makeText(this, "请输入血糖值", Toast.LENGTH_SHORT).show();
             return;
