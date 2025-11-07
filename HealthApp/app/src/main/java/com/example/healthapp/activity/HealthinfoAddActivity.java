@@ -114,7 +114,22 @@ public class HealthinfoAddActivity extends AppCompatActivity implements View.OnC
             return;
         }
         if (TextUtils.isEmpty(strTv_heartrate)) {
-            Toast.makeText(this, "请输入内容", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入心率值", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            double heartRate = Double.parseDouble(strTv_heartrate);
+            if (heartRate < 0) { // 核心：禁止负数输入
+                Toast.makeText(this, "心率值不能为负数", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            // 生理合理范围校验（成年人静息心率60-100，运动时可达180+，范围放宽到0-200）
+            if (heartRate > 200) {
+                Toast.makeText(this, "心率值超出合理范围（0~200）", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "请输入有效的心率值", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(strTv_des)) {
