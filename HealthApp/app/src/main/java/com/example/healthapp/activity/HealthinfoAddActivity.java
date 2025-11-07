@@ -133,7 +133,18 @@ public class HealthinfoAddActivity extends AppCompatActivity implements View.OnC
             return;
         }
         if (TextUtils.isEmpty(strTv_des)) {
-            Toast.makeText(this, "请输入内容", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入描述信息", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // 统计纯中文字符数（排除数字、字母、符号、空格）
+        int chineseCount = 0;
+        for (char c : strTv_des.toCharArray()) {
+            if (Character.toString(c).matches("[\\u4e00-\\u9fa5]")) { // 匹配中文Unicode范围
+                chineseCount++;
+            }
+        }
+        if (chineseCount < 5) {
+            Toast.makeText(this, "描述需包含至少5个汉字", Toast.LENGTH_SHORT).show();
             return;
         }
         Healthinfo data = new Healthinfo();
